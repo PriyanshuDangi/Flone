@@ -96,21 +96,23 @@ export const mintNFT = async () => {
                   }
                 }
                 `,
-        args: (arg, t) => [arg("woah", t.String), arg([{ key: "first", value: "nft on flow" }], t.Dictionary({ key: t.String, value: t.String }))],
+        args: (arg, t) => [
+            arg('woah', t.String),
+            arg([{ key: 'first', value: 'nft on flow' }], t.Dictionary({ key: t.String, value: t.String })),
+        ],
         proposer: fcl.authz,
         payer: fcl.authz,
         authorizations: [fcl.authz],
-
-    })
+    });
     fcl.tx(transactionId).subscribe((transaction) => {
         console.log(transaction);
     });
 
     console.log(transactionId);
-}
+};
 
 export const getNFTs = async (addr) => {
-    console.log(addr)
+    console.log(addr);
     const response = await fcl.query({
         cadence: `
             import MyNFT from 0xa6acb8c2a3d23fef
@@ -127,7 +129,7 @@ export const getNFTs = async (addr) => {
             return returnVals
             }
         `,
-        args: (arg, t) => [arg(addr, t.Address)]
+        args: (arg, t) => [arg(addr, t.Address)],
     });
 
     console.log(response);
@@ -158,5 +160,3 @@ export const getNFTs = async (addr) => {
 //     console.log(response);
 //     // return await fcl.decode(response);
 // };
-
-
