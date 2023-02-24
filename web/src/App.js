@@ -3,7 +3,7 @@ import './App.css';
 import * as fcl from '@onflow/fcl';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setUser } from './store/reducers/walletSlice';
-import { authenticate, runTransaction, sayHello, unauthenticate } from './utils/wallet';
+import { authenticate, createEmptyCollection, mintNFT, getNFTs, unauthenticate } from './utils/wallet';
 
 function App() {
     const dispatch = useDispatch();
@@ -21,10 +21,13 @@ function App() {
                 <>
                     <div>Welcome ${user.addr}</div>
                     <div>
-                        <button onClick={sayHello}>Say Hello</button>
+                        <button onClick={() => getNFTs(user.addr)}>Get NFTs</button>
                     </div>
                     <div>
-                        <button onClick={runTransaction}>Run Transaction</button>
+                        <button onClick={createEmptyCollection}>Create Empty Collection</button>
+                    </div>
+                    <div>
+                        <button onClick={mintNFT}>Mint NFT</button>
                     </div>
                     <div>
                         <button onClick={unauthenticate}>LogOut</button>

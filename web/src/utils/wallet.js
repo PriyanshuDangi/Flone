@@ -44,18 +44,22 @@ export const sayHello = async () => {
 //     return await fcl.decode(response);
 // }
 
-export const runTransaction = async () => {
+export const createEmptyCollection = async () => {
     const transactionId = await fcl.mutate({
         cadence: `
-            import HelloWorld from 0xa6acb8c2a3d23fef
-            transaction {
-                prepare(signer: AuthAccount) {
+                import NonFungibleToken from 0x631e88ae7f1d7c20
+                import MyNFT from 0xa6acb8c2a3d23fef
+
+                transaction {
+                    prepare(acct: AuthAccount) {
+                        acct.save(<- MyNFT.createEmptyCollection(), to: /storage/MyNFTCollection)
+                        acct.link<&MyNFT.Collection{MyNFT.CollectionPublic, NonFungibleToken.CollectionPublic}>(/public/MyNFTCollection, target: /storage/MyNFTCollection)
+                    }
+                    
+                    execute {
+                        log("User Created the collection")
+                    }
                 }
-                execute {
-                    HelloWorld.changeGreeting(newGreeting: "Hello, Priyanshu Dangi!")
-                    log("Hello, World!")
-                }
-            }
                 `,
         args: (arg, t) => [],
         proposer: fcl.authz,
@@ -69,3 +73,90 @@ export const runTransaction = async () => {
 
     console.log(transactionId);
 };
+
+export const mintNFT = async () => {
+    const transactionId = await fcl.mutate({
+        cadence: `
+                import MyNFT from 0xa6acb8c2a3d23fef
+
+                transaction(ipfsHash: String, metadata: {String: String}) {
+                
+                  prepare(acct: AuthAccount) {
+                    let collection = acct.borrow<&MyNFT.Collection>(from: /storage/MyNFTCollection)
+                                        ?? panic("This Collection does not exists")
+                
+                    let nft <- MyNFT.createToken(ipfsHash: ipfsHash, metadata: metadata)
+                
+                    collection.deposit(token: <- nft)
+                    
+                  }
+                
+                  execute {
+                    log("User Minted the NFT")
+                  }
+                }
+                `,
+        args: (arg, t) => [arg("woah", t.String), arg([{ key: "first", value: "nft on flow" }], t.Dictionary({ key: t.String, value: t.String }))],
+        proposer: fcl.authz,
+        payer: fcl.authz,
+        authorizations: [fcl.authz],
+
+    })
+    fcl.tx(transactionId).subscribe((transaction) => {
+        console.log(transaction);
+    });
+
+    console.log(transactionId);
+}
+
+export const getNFTs = async (addr) => {
+    console.log(addr)
+    const response = await fcl.query({
+        cadence: `
+            import MyNFT from 0xa6acb8c2a3d23fef
+            import NonFungibleToken from 0x631e88ae7f1d7c20
+            pub fun main(account: Address): [&MyNFT.NFT] {
+            let collection = getAccount(account).getCapability(/public/MyNFTCollection)
+                                .borrow<&MyNFT.Collection{NonFungibleToken.CollectionPublic, MyNFT.CollectionPublic}>()
+                                ?? panic("Can't get the User's collection.")
+            let returnVals: [&MyNFT.NFT] = []
+            let ids = collection.getIDs()
+            for id in ids {
+                returnVals.append(collection.borrowEntireNFT(id: id))
+            }
+            return returnVals
+            }
+        `,
+        args: (arg, t) => [arg(addr, t.Address)]
+    });
+
+    console.log(response);
+    // return await fcl.decode(response);
+};
+
+// export const getNFTs = async (addr) => {
+//     console.log(addr)
+//     const response = await fcl.query({
+//         cadence: `
+//             import MyNFT from 0xa6acb8c2a3d23fef
+//             import NonFungibleToken from 0x631e88ae7f1d7c20
+//             pub fun main(account: Address): [&MyNFT.NFT] {
+//             let collection = getAccount(account).getCapability(/public/MyNFTCollection)
+//                                 .borrow<&MyNFT.Collection{NonFungibleToken.CollectionPublic, MyNFT.CollectionPublic}>()
+//                                 ?? panic("Can't get the User's collection.")
+//             let returnVals: [&MyNFT.NFT] = []
+//             let ids = collection.getIDs()
+//             for id in ids {
+//                 returnVals.append(collection.borrowEntireNFT(id: id))
+//             }
+//             return returnVals
+//             }
+//         `,
+//         args: (arg, t) => [arg(addr, t.Address)]
+//     });
+
+//     console.log(response);
+//     // return await fcl.decode(response);
+// };
+
+
