@@ -61,6 +61,11 @@ const cubeBox = new THREE.Box3(new THREE.Vector3(-1, -1, -1), new THREE.Vector3(
 const playerBox = new THREE.Box3();
 const playerSphere = new THREE.Sphere();
 
+let _xColumn = new THREE.Vector3();
+let _yColumn = new THREE.Vector3();
+let _v3A = new THREE.Vector3();
+let _v3B = new THREE.Vector3();
+
 let initialState = {
     forward: false,
     backward: false,
@@ -179,7 +184,16 @@ const CameraControlsWalk = ({ ...props }) => {
             cameraControls.forward(direction.z, false);
         }
         if (side) {
-            cameraControls.truck(direction.x, 0, false);
+            // cameraControls.truck(direction.x, 0, false);
+
+            // cameraControls._camera.updateMatrix();
+            _xColumn.setFromMatrixColumn(cameraControls._camera.matrix, 0);
+            _yColumn.setFromMatrixColumn(cameraControls._camera.matrix, 1);
+            _xColumn.multiplyScalar(direction.x);
+            _yColumn.multiplyScalar(0);
+            const offset = _v3A.copy(_xColumn).add(_yColumn);
+            const to = _v3B.copy(cameraControls._targetEnd).add(offset);
+            cameraControls.moveTo(to.x, to.y, 0, false);
         }
 
         if (front || side) {
