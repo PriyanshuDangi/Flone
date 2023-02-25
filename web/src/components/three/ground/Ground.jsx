@@ -13,9 +13,7 @@ const Ground = (props) => {
         // geometry.rotateX(Math.PI / 2);
         const loader = new THREE.TextureLoader();
 
-        const texture = loader.load(
-            stoneSilverImg,
-        );
+        const texture = loader.load(stoneSilverImg);
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(piece * boxSize, piece * boxSize);
@@ -24,7 +22,7 @@ const Ground = (props) => {
         // texture.repeat.set(length*piece, length*piece);
         // const material = new THREE.MeshPhongMaterial({ map: texture, shininess: 2, color: '#333' });
         const material = new THREE.MeshBasicMaterial({ map: texture, color: '#999' });
-        
+
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.y -= boxSize / 2;
         scene.add(mesh);

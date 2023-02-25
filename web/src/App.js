@@ -7,8 +7,7 @@ import { authenticate, createEmptyCollection, mintNFT, getNFTs, unauthenticate }
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import World from './containers/world/World';
-import Home from './containers/home/Home'
-
+import Home from './containers/home/Home';
 
 function App() {
     const dispatch = useDispatch();
@@ -30,8 +29,7 @@ function App() {
                 </Routes>
             </Suspense>
         </Router>
-
-    )
+    );
     // return (
     //     <>
     //         {user.loggedIn ? (

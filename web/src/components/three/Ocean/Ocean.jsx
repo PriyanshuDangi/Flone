@@ -6,7 +6,7 @@ import { Water } from './Water';
 // import { Water } from 'three/examples/jsm/objects/Water';
 import { Sky } from 'three/examples/jsm/objects/Sky';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
-import WaterNormals from "../../../assets/world/waternormals.jpg";
+import WaterNormals from '../../../assets/world/waternormals.jpg';
 
 const Ocean = () => {
     const { scene, gl, camera } = useThree();
