@@ -12,6 +12,9 @@ import socket from '../../utils/socket/socket';
 import * as THREE from 'three';
 import Players from '../../components/three/players/Players';
 import { useEffect, useState } from 'react';
+import Cubes from '../../components/three/Cubes/Cubes';
+import { useSelector } from 'react-redux';
+import { selectCubesNFT } from '../../store/reducers/cubesNFTSlice';
 
 let initialState = {
     forward: false,
@@ -23,6 +26,10 @@ let initialState = {
 };
 
 const World = (props) => {
+
+    const cubesData = useSelector(selectCubesNFT);
+    // const cubesData = [];
+
     const [controlsType, setControls] = useState('move');
     const [userId, setUserId] = useState(nanoid());
     const [initialPos, setInitialPos] = useState({ x: 0, y: 0, z: 0 });
@@ -75,9 +82,10 @@ const World = (props) => {
                 {/* <Perf position="top-left" /> */}
                 <Ocean />
                 <Ground length={11} breadth={11} />
-                <OrbitControls />
+                {/* <OrbitControls /> */}
                 {controls}
-                <Players />
+                <Cubes cubesData={cubesData} />
+                {/* <Players /> */}
             </Canvas>
         </div>
     );

@@ -7,8 +7,7 @@ import { avatars } from '../../../assets/avatar';
 import * as boxmanActions from '../player/boxmanActions';
 import Boxman from '../player/Boxman';
 import useCameraControls from './UseCameraControls';
-// import useCubePosition from '../Cubes/CubesPosition';
-// import useStore from '../../zustand/useStore';
+import useStore from '../../../zustand/useStore';
 
 import { boxSize, piece, continentPiece } from '../../../config/world.js';
 
@@ -78,7 +77,7 @@ let initialState = {
 const CameraControlsWalk = ({ ...props }) => {
     const { camera } = useThree();
     const cameraControls = useCameraControls();
-    // const cubesPos = useStore((state) => state.cubesPos);
+    const cubesPos = useStore((state) => state.cubesPos);
 
     // const { movement, setMovement } = props;
 
@@ -155,14 +154,14 @@ const CameraControlsWalk = ({ ...props }) => {
             for (let y = y1; y <= y2; y += 2) {
                 for (let z = z1; z <= z2; z += 2) {
                     let key = getKey({ x, y, z });
-                    // if (cubesPos.has(key)) {
-                    //     cubeBox.setFromCenterAndSize(new THREE.Vector3(x, y, z), new THREE.Vector3(2, 2, 2));
-                    //     let intersect = playerBox.intersectsBox(cubeBox);
-                    //     // let intersect = playerSphere.intersectsBox(cubeBox);
-                    //     if (intersect) {
-                    //         return true;
-                    //     }
-                    // }
+                    if (cubesPos.has(key)) {
+                        cubeBox.setFromCenterAndSize(new THREE.Vector3(x, y, z), new THREE.Vector3(2, 2, 2));
+                        let intersect = playerBox.intersectsBox(cubeBox);
+                        // let intersect = playerSphere.intersectsBox(cubeBox);
+                        if (intersect) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
@@ -184,16 +183,7 @@ const CameraControlsWalk = ({ ...props }) => {
             cameraControls.forward(direction.z, false);
         }
         if (side) {
-            // cameraControls.truck(direction.x, 0, false);
-
-            // cameraControls._camera.updateMatrix();
-            _xColumn.setFromMatrixColumn(cameraControls._camera.matrix, 0);
-            _yColumn.setFromMatrixColumn(cameraControls._camera.matrix, 1);
-            _xColumn.multiplyScalar(direction.x);
-            _yColumn.multiplyScalar(0);
-            const offset = _v3A.copy(_xColumn).add(_yColumn);
-            const to = _v3B.copy(cameraControls._targetEnd).add(offset);
-            cameraControls.moveTo(to.x, to.y, 0, false);
+            cameraControls.truck(direction.x, 0, false);
         }
 
         if (front || side) {

@@ -77,24 +77,32 @@ export const createEmptyCollection = async () => {
 export const mintNFT = async () => {
     const transactionId = await fcl.mutate({
         cadence: `
-                import MyNFT from 0xa6acb8c2a3d23fef
-
+                import NonFungibleToken from 0x631e88ae7f1d7c20
+                import LandNFT from 0xa6acb8c2a3d23fef
+                
                 transaction(ipfsHash: String, metadata: {String: String}) {
                 
-                  prepare(acct: AuthAccount) {
-                    let collection = acct.borrow<&MyNFT.Collection>(from: /storage/MyNFTCollection)
-                                        ?? panic("This Collection does not exists")
+                let minter: &LandNFT.NFTMinter
                 
-                    let nft <- MyNFT.createToken(ipfsHash: ipfsHash, metadata: metadata)
-                
-                    collection.deposit(token: <- nft)
+                prepare(acct: AuthAccount) {
+                    self.minter = acct.borrow<&LandNFT.NFTMinter>(from: LandNFT.MinterStoragePath)
+                            ?? panic("Could not borrow a reference to the NFT minter")
                     
-                  }
+                    log(acct)
                 
-                  execute {
-                    log("User Minted the NFT")
-                  }
+                    let receiver = acct
+                            .getCapability(LandNFT.CollectionPublicPath)
+                            .borrow<&{NonFungibleToken.CollectionPublic}>()
+                            ?? panic("Could not get receiver reference to the NFT Collection")
+                
+                        // Mint the NFT and deposit it to the recipient's collection
+                        self.minter.mintNFT(recipient: receiver,ipfsHash: ipfsHash, metadata: metadata)
                 }
+                
+                execute {
+                    log("User Created the collection")
+                }
+                }        
                 `,
         args: (arg, t) => [
             arg('woah', t.String),
@@ -111,28 +119,31 @@ export const mintNFT = async () => {
     console.log(transactionId);
 };
 
-export const getNFTs = async (addr) => {
-    console.log(addr);
+export const getNFTs = async (addr="0xa6acb8c2a3d23fef") => {
     const response = await fcl.query({
         cadence: `
-            import MyNFT from 0xa6acb8c2a3d23fef
-            import NonFungibleToken from 0x631e88ae7f1d7c20
-            pub fun main(account: Address): [&MyNFT.NFT] {
-            let collection = getAccount(account).getCapability(/public/MyNFTCollection)
-                                .borrow<&MyNFT.Collection{NonFungibleToken.CollectionPublic, MyNFT.CollectionPublic}>()
-                                ?? panic("Can't get the User's collection.")
-            let returnVals: [&MyNFT.NFT] = []
-            let ids = collection.getIDs()
-            for id in ids {
-                returnVals.append(collection.borrowEntireNFT(id: id))
-            }
-            return returnVals
-            }
+                import NonFungibleToken from 0x631e88ae7f1d7c20
+                import LandNFT from 0xa6acb8c2a3d23fef
+                
+                pub fun main(account: Address): [&LandNFT.NFT] {
+                let collection = getAccount(account).getCapability(/public/LandNFTCollection)
+                                    .borrow<&LandNFT.Collection{NonFungibleToken.CollectionPublic, LandNFT.CollectionPublic}>()
+                                    ?? panic("Can't get the User's collection.")
+                                
+                // log(collection.borrowEntireNFT(id: 0))
+                let returnVals: [&LandNFT.NFT] = []
+                            let ids = collection.getIDs()
+                            for id in ids {
+                                returnVals.append(collection.borrowEntireNFT(id: id))
+                            }
+                            log(returnVals)
+                            return returnVals
+                }
         `,
         args: (arg, t) => [arg(addr, t.Address)],
     });
-
-    console.log(response);
+    console.log(response)
+    return response;
     // return await fcl.decode(response);
 };
 
@@ -160,3 +171,36 @@ export const getNFTs = async (addr) => {
 //     console.log(response);
 //     // return await fcl.decode(response);
 // };
+
+
+export const setIPFS = async (id, ipfsHash) => {
+    const transactionId = await fcl.mutate({
+        cadence: `
+                import LandNFT from 0xa6acb8c2a3d23fef
+
+                transaction(id: UInt64, ipfsHash: String) {
+
+                prepare(acct: AuthAccount) {
+                    let collection = acct.borrow<&LandNFT.Collection>(from: LandNFT.CollectionStoragePath)
+                    ?? panic("Could not borrow a reference to the owner's collection")
+
+                    collection.updateIPFS(id: id, ipfsHash: ipfsHash)
+                    
+                }
+                execute {
+                    log("User Updated The Hash")
+                }
+                }
+                `,
+        args: (arg, t) => [arg(id, t.UInt64), arg(ipfsHash, t.String)],
+        proposer: fcl.authz,
+        payer: fcl.authz,
+        authorizations: [fcl.authz],
+    });
+    fcl.tx(transactionId).subscribe((transaction) => {
+        console.log(transaction);
+    });
+
+    return fcl.tx(transactionId).onceSealed();
+
+}

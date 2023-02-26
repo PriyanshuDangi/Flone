@@ -3,11 +3,12 @@ import './App.css';
 import * as fcl from '@onflow/fcl';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setUser } from './store/reducers/walletSlice';
-import { authenticate, createEmptyCollection, mintNFT, getNFTs, unauthenticate } from './utils/wallet';
+import { authenticate, createEmptyCollection, mintNFT, getNFTs, unauthenticate, setIPFS } from './utils/wallet';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import World from './containers/world/World';
 import Home from './containers/home/Home';
+import { setCubesNFTAsync } from './store/reducers/cubesNFTSlice';
 
 function App() {
     const dispatch = useDispatch();
@@ -19,6 +20,18 @@ function App() {
     };
     // const [user, setUser] = useState({ loggedIn: null });
     useEffect(() => fcl.currentUser.subscribe(callback), []); // sets the callback for FCL to use
+
+    useEffect(() => {
+        const func = async () => {
+            try {
+                dispatch(setCubesNFTAsync());
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        func();
+
+    }, [])
 
     return (
         <Router>
@@ -37,6 +50,9 @@ function App() {
     //                 <div>Welcome ${user.addr}</div>
     //                 <div>
     //                     <button onClick={() => getNFTs(user.addr)}>Get NFTs</button>
+    //                 </div>
+    //                 <div>
+    //                     <button onClick={() => setIPFS(0, "bafkreif2igm2eadlcmhdk4u4hbazh6rtxx3ak7qlngu5ejdpnul3h57hom")}>Get NFTs</button>
     //                 </div>
     //                 <div>
     //                     <button onClick={createEmptyCollection}>Create Empty Collection</button>
