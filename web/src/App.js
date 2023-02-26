@@ -1,14 +1,18 @@
 import React, { Suspense, useEffect } from 'react';
 import './App.css';
+
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import * as fcl from '@onflow/fcl';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setUser } from './store/reducers/walletSlice';
-import { authenticate, createEmptyCollection, mintNFT, getNFTs, unauthenticate, setIPFS } from './utils/wallet';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import World from './containers/world/World';
 import Home from './containers/home/Home';
 import { setCubesNFTAsync } from './store/reducers/cubesNFTSlice';
+import Admin from './containers/admin/Admin';
 
 function App() {
     const dispatch = useDispatch();
@@ -38,37 +42,12 @@ function App() {
             <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                     <Route exact element={<World />} path={'/world'} />
+                    <Route exact element={<Admin />} path={'/admin'} />
                     <Route exact element={<Home />} path={'/'} />
                 </Routes>
             </Suspense>
         </Router>
     );
-    // return (
-    //     <>
-    //         {user.loggedIn ? (
-    //             <>
-    //                 <div>Welcome ${user.addr}</div>
-    //                 <div>
-    //                     <button onClick={() => getNFTs(user.addr)}>Get NFTs</button>
-    //                 </div>
-    //                 <div>
-    //                     <button onClick={() => setIPFS(0, "bafkreif2igm2eadlcmhdk4u4hbazh6rtxx3ak7qlngu5ejdpnul3h57hom")}>Get NFTs</button>
-    //                 </div>
-    //                 <div>
-    //                     <button onClick={createEmptyCollection}>Create Empty Collection</button>
-    //                 </div>
-    //                 <div>
-    //                     <button onClick={mintNFT}>Mint NFT</button>
-    //                 </div>
-    //                 <div>
-    //                     <button onClick={unauthenticate}>LogOut</button>
-    //                 </div>
-    //             </>
-    //         ) : (
-    //             <button onClick={authenticate}>LogIn</button>
-    //         )}
-    //     </>
-    // );
 }
 
 export default App;

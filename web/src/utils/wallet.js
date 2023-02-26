@@ -74,7 +74,7 @@ export const createEmptyCollection = async () => {
     console.log(transactionId);
 };
 
-export const mintNFT = async () => {
+export const mintNFT = async (hash = "") => {
     const transactionId = await fcl.mutate({
         cadence: `
                 import NonFungibleToken from 0x631e88ae7f1d7c20
@@ -105,7 +105,7 @@ export const mintNFT = async () => {
                 }        
                 `,
         args: (arg, t) => [
-            arg('woah', t.String),
+            arg(hash, t.String),
             arg([{ key: 'first', value: 'nft on flow' }], t.Dictionary({ key: t.String, value: t.String })),
         ],
         proposer: fcl.authz,
