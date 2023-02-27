@@ -13,8 +13,7 @@ import World from './containers/world/World';
 import Home from './containers/home/Home';
 import { setCubesNFTAsync } from './store/reducers/cubesNFTSlice';
 import Admin from './containers/admin/Admin';
-import { Navbar } from 'react-bootstrap';
-import NavScrollExample from './components/navbar/Navbar';
+import WorldHome from './containers/world/home/WorldHome';
 
 function App() {
     const dispatch = useDispatch();
@@ -42,9 +41,8 @@ function App() {
     return (
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
-                <NavScrollExample />
                 <Routes>
-                    <Route exact element={<World />} path={'/world'} />
+                    <Route exact element={<WorldHome />} path={'/world'} />
                     <Route exact element={<Admin />} path={'/admin'} />
                     <Route exact element={<Home />} path={'/'} />
                 </Routes>

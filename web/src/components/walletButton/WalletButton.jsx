@@ -6,7 +6,7 @@ import {
 } from '../../store/reducers/walletSlice';
 import { Button } from 'react-bootstrap';
 import tezosLogo from '../../assets/images/flow-logo.png';
-import * as fcl from '@onflow/fcl';
+import { authenticate, unauthenticate } from '../../utils/wallet';
 
 const short = (pkh) => {
     if (pkh) return pkh.substring(0, 6) + '...' + pkh.substring(pkh.length - 4);
@@ -18,12 +18,11 @@ const WalletButton = (props) => {
 
     const clicked = () => {
         console.log(walletConnected);
-        if (walletConnected) {
-            fcl.authenticate();
+        if (!walletConnected) {
+            authenticate()
         } else {
-            fcl.unauthenticate();
+            unauthenticate();
         }
-
     };
 
     return (

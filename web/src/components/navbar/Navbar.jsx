@@ -1,16 +1,16 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import BootStrapNavbar from 'react-bootstrap/Navbar';
 import WalletButton from '../walletButton/WalletButton';
 import { NavLink } from 'react-router-dom';
 
-function NavScrollExample() {
+function Navbar() {
     return (
-        <Navbar bg="dark" variant="dark" expand="sm">
+        <BootStrapNavbar bg="dark" variant="dark" expand="sm">
             <Container fluid>
-                <Navbar.Brand href="/">FLONE</Navbar.Brand>
-                <Navbar.Toggle aria-controls="navbarScroll" />
-                <Navbar.Collapse id="navbarScroll">
+                <BootStrapNavbar.Brand href="/">FLONE</BootStrapNavbar.Brand>
+                <BootStrapNavbar.Toggle aria-controls="navbarScroll" />
+                <BootStrapNavbar.Collapse id="navbarScroll">
                     <Nav
                         className="me-auto my-2 my-lg-0"
                         style={{ maxHeight: '100px' }}
@@ -23,10 +23,10 @@ function NavScrollExample() {
                     <div className='d-flex'>
                         <WalletButton variant="dark" />
                     </div>
-                </Navbar.Collapse>
+                </BootStrapNavbar.Collapse>
             </Container>
-        </Navbar>
+        </BootStrapNavbar>
     );
 }
 
-export default NavScrollExample;
+export default Navbar;
