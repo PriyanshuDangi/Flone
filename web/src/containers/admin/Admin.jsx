@@ -7,9 +7,9 @@ const Admin = () => {
 
     const updateIPFS = (event) => {
         event.preventDefault();
-        const token_id = event.target.token_id
-        const hash = event.target.hash
-        setIPFS(token_id, hash);
+        const token_id = event.target.token_id.value
+        const hash = event.target.hash.value
+        setIPFS(parseInt(token_id), hash);
     }
 
     const mintHandler = (event) => {

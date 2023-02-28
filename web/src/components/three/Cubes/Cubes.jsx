@@ -10,16 +10,24 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { useFrame } from '@react-three/fiber';
 import useStore from '../../../zustand/useStore';
 import { BACKEND_URL, PINATA_GATEWAY_URL } from '../../../config/app';
+import { useLocation } from 'react-router-dom';
 
 const { object, meshes } = createMesh(1 * 100 * 5);
 let cubesCount = tiles.map(() => 0);
 // const stats = new Stats();
 let maxImageCount = 3;
 
+const useQuery = () => {
+    const { search } = useLocation();
+
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+};
+
 const Cubes = (props) => {
     const cubesData = props.cubesData;
-    const { scene, camera } = useThree();
+    const { scene } = useThree();
     const updateCubesPos = useStore((state) => state.updateCubesPos);
+    const query = useQuery();
 
     useEffect(() => {
         const ambientLight = new THREE.AmbientLight(0x606060);
@@ -65,18 +73,14 @@ const Cubes = (props) => {
                     let origin = tokenToCoordinates(parseInt(token_id));
 
                     if (land_ipfs) {
-                        // let res = await axios.get(PINATA_GATEWAY_URL + land_ipfs.slice(7), {
-                        //     maxContentLength: 2000,
-                        //     maxBodyLength: 2000,
-                        // });
                         let res = {};
-                        if(process.env.REACT_APP_CUBES_MODE === 'backend'){
+                        if(query.get('fetch') === 'backend'){
                             res = await axios({
-                                url: `${BACKEND_URL}/storage/lands/${token_id}/ipfs.json`
+                                url: `${process.env.REACT_APP_BACKEND_URL}/storage/lands/${token_id}/ipfs.json`
                             }); 
                         }else {
                            res = await axios({
-                            url: PINATA_GATEWAY_URL + land_ipfs,
+                            url: process.env.REACT_APP_PINATA_GATEWAY_URL + land_ipfs,
                         }); 
                         }
                         const cubes = res.data.cubes;
@@ -124,7 +128,7 @@ const Cubes = (props) => {
                             images = images.slice(0, maxImageCount);
                             for (let j = 0; j < images.length; j++) {
                                 let { image, url, position, quaternion, size } = images[j];
-                                if (image.substring(0, 7) === 'ipfs://') image = PINATA_GATEWAY_URL + image.slice(7);
+                                if (image.substring(0, 7) === 'ipfs://') image = process.env.REACT_APP_PINATA_GATEWAY_URL + image.slice(7);
                                 if (!image || !url || !position || !quaternion || !size) {
                                     continue;
                                 }

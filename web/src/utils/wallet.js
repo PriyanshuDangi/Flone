@@ -174,6 +174,7 @@ export const getNFTs = async (addr="0xa6acb8c2a3d23fef") => {
 
 
 export const setIPFS = async (id, ipfsHash) => {
+    console.log(typeof id);
     const transactionId = await fcl.mutate({
         cadence: `
                 import LandNFT from 0xa6acb8c2a3d23fef
