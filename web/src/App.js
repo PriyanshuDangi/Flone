@@ -17,12 +17,12 @@ import WorldHome from './containers/world/home/WorldHome';
 
 function App() {
     const dispatch = useDispatch();
-    const user = useSelector(selectUser);
 
     const callback = (user) => {
         console.log(user);
         dispatch(setUser(user));
     };
+
     // const [user, setUser] = useState({ loggedIn: null });
     useEffect(() => fcl.currentUser.subscribe(callback), []); // sets the callback for FCL to use
 
@@ -36,6 +36,7 @@ function App() {
         }
         func();
 
+        console.log("woah");
     }, [])
 
     return (

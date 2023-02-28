@@ -1,0 +1,42 @@
+.container {
+    text-align: center;
+    background: rgba(245, 245, 245, 0.4);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(73, 73, 73);
+    color: black;
+    font-size: 1.1em;
+    width: 100px;
+}
+
+.container .info {
+    font-size: 24px;
+    max-height: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    color: #000;
+}
+
+.container .info .button {
+    height: 40px;
+    width: 40px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.container .info .volumeButton {
+    color: #000;
+    margin: 0;
+    padding: 0;
+    transform: scale(1.1);
+}
+
+.container .info .red {
+    color: red;
+}

@@ -11,10 +11,24 @@ import socket from '../../utils/socket/socket';
 // import {Perf} from "r3f-perf"
 import * as THREE from 'three';
 import Players from '../../components/three/players/Players';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Cubes from '../../components/three/Cubes/Cubes';
 import { useSelector } from 'react-redux';
 import { selectCubesNFT } from '../../store/reducers/cubesNFTSlice';
+
+import Chat from '../../components/chat/connectChat';
+
+import styleClasses from "./styles.module.css";
+
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import ChatIcon from '@mui/icons-material/Chat';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import VolumeSlider from '../../components/VolumeSlider/VolumeSlider';
+
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 
 let initialState = {
     forward: false,
@@ -50,6 +64,8 @@ const World = (props) => {
     const [movement, setMovement] = useState(initialState);
     const [touchDevice, setTouchDevice] = useState(false);
 
+    const handleFullScreen = useFullScreenHandle();
+
     useEffect(() => {
         if ('ontouchstart' in window) {
             setTouchDevice(true);
@@ -57,10 +73,10 @@ const World = (props) => {
         } else {
             setShowChat(true); // show chat from the start on pc
         }
+        console.log('socket');
         socket.emit('new_user', {
             roomId,
             key: userId,
-            roomId,
             position: [initialPos.x, initialPos.y, initialPos.z],
             quaternion: [0, 0, 0, 1],
             avatarType: avatar,
@@ -99,7 +115,22 @@ const World = (props) => {
     // let controls = <MeshWalk />;
     // let controls = <ThirdPersonControls />;
 
+    const reportChange = useCallback(
+        (state, handle) => {
+            if (handle === handleFullScreen) {
+                if (state) setFullscreen(true);
+                else setFullscreen(false);
+            }
+        },
+        [handleFullScreen],
+    );
+
     return (
+        <>
+        <FullScreen handle={handleFullScreen} onChange={reportChange}>
+
+
+        
         <div style={{ height: '100vh' }}>
             {/* gl={{ antialias: true, toneMapping: THREE.NoToneMapping }} */}
             <Canvas gl={{ antialias: true, toneMapping: THREE.NoToneMapping }} camera={{ far: 4000 }}>
@@ -109,9 +140,60 @@ const World = (props) => {
                 {/* <OrbitControls /> */}
                 {controls}
                 <Cubes cubesData={cubesData} />
-                {/* <Players /> */}
+                <Players />
             </Canvas>
+
+            <div className={styleClasses.sidebar}>
+                <div className={styleClasses.sidebar__header}>
+                    <div className={styleClasses.icon}>
+                        {!showVolumeSlider ? (
+                            <VolumeUpIcon
+                                onClick={() => {
+                                    setShowVolumeSlider(true);
+                                    setShowChat(false);
+                                    setShowMenu(false);
+                                }}
+                            />
+                        ) : (
+                            <CloseIcon onClick={() => setShowVolumeSlider(false)} />
+                        )}
+                    </div>
+                    <div className={styleClasses.icon}>
+                        {!showChat ? (
+                            <ChatIcon
+                                onClick={() => {
+                                    setShowChat(true);
+                                    setShowVolumeSlider(false);
+                                    setShowMenu(false);
+                                }}
+                            />
+                        ) : (
+                            <CloseIcon onClick={() => setShowChat(false)} />
+                        )}
+                    </div>
+                    <div className={styleClasses.icon}>
+                        {!fullscreen ? (
+                            <FullscreenIcon onClick={handleFullScreen.enter} />
+                        ) : (
+                            <FullscreenExitIcon onClick={handleFullScreen.exit} />
+                        )}
+                    </div>
+                </div>
+                <div className={`${styleClasses.sidebar__body} ${!showSidebar ? styleClasses.none : ''}`}>
+                    {showVolumeSlider && (
+                        <VolumeSlider
+                            bgVolume={bgVolume}
+                            setBgVolume={setBgVolume}
+                            footVolume={footVolume}
+                            setFootVolume={setFootVolume}
+                        />
+                    )}
+                    <Chat userName={userName} roomId={roomId} userId={userId} show={showChat} />
+                </div>
+            </div>
         </div>
+        </FullScreen>
+        </>
     );
 };
 

@@ -1,0 +1,57 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    /* height: 100%; */
+    padding: 5px;
+    padding-right: 25px;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+}
+
+.sidebar .sidebar__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 20px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid #e5e5e5;
+}
+
+.sidebar .icon {
+    height: 40px;
+    width: 40px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar .sidebar__body {
+    margin-top: 20px;
+    width: 100%;
+    color: black;
+}
+
+.none {
+    display: none;
+}
+
+.joystickContainer {
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999; */
+    position: fixed;
+    left: 50px;
+    bottom: 30px;
+}

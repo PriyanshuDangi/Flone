@@ -93,12 +93,6 @@ const WorldHome = () => {
                                         <span className={styleClasses.focusBorder}></span>
                                     </div>
                                     <button onClick={() => setShowWorld(true)}>Enter World</button>
-                                    <div style={{ width: '200px', textAlign: 'left', fontSize: '13px', color: 'gray' }}>
-                                        <strong style={{ color: '#000' }}>NOTE</strong>: This is the public room of
-                                        StoneAge, you can connect using chat and voice with others.
-                                        <br />
-                                        Please maintain discipline and be respectful with others.
-                                    </div>
                                 </div>
                             ) : (
                                 <div className={styleClasses.info}>
