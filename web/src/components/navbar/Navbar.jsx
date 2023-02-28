@@ -1,32 +1,100 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import BootStrapNavbar from 'react-bootstrap/Navbar';
+import React, { useState, useEffect } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import LogoImg from '../../assets/images/2242.png';
 import WalletButton from '../walletButton/WalletButton';
 import { NavLink } from 'react-router-dom';
+import styleClasses from './styles.module.css';
 
-function Navbar() {
+const NavBar = ({ background, color, scroll }) => {
+    const [navbarActive, setNavbarActive] = useState(false);
+    const [toggleNavbar, setToggleNavbar] = useState(false);
+    const [walletVariant, setWalletVariant] = useState('');
+
+    useEffect(() => {
+        const checkNavbarActive = () => {
+            if (window.scrollY > 0 && scroll) {
+                setNavbarActive(true);
+                setWalletVariant('');
+            } else {
+                setWalletVariant('dark');
+                setNavbarActive(false);
+            }
+        };
+        window.addEventListener('scroll', checkNavbarActive);
+        checkNavbarActive();
+        return () => {
+            window.removeEventListener('scroll', checkNavbarActive);
+        };
+    }, []);
+
     return (
-        <BootStrapNavbar bg="dark" variant="dark" expand="sm">
-            <Container fluid>
-                <BootStrapNavbar.Brand href="/">FLONE</BootStrapNavbar.Brand>
-                <BootStrapNavbar.Toggle aria-controls="navbarScroll" />
-                <BootStrapNavbar.Collapse id="navbarScroll">
-                    <Nav
-                        className="me-auto my-2 my-lg-0"
-                        style={{ maxHeight: '100px' }}
-                        navbarScroll
-                    >
-                        <NavLink className={"nav-link"} to="/">Home</NavLink>
-                        <NavLink className={"nav-link"} to="/world">World</NavLink>
-                        <NavLink className={"nav-link"} to="/admin">Admin</NavLink>
-                    </Nav>
-                    <div className='d-flex'>
-                        <WalletButton variant="dark" />
+        <>
+            <header
+                className={`${styleClasses.navbar} ${navbarActive ? styleClasses.navbarActive : ''}`}
+                style={{
+                    background: background !== 'transparent' && background,
+                }}
+            >
+                <div className={styleClasses.logoContainer}>
+                    <NavLink to="/">
+                        <img alt="Logo" src={LogoImg} />
+                    </NavLink>
+                </div>
+                <div className={styleClasses.expandMenu}>
+                    <MenuIcon
+                        onClick={() => {
+                            setToggleNavbar(!toggleNavbar);
+                        }}
+                    />
+                </div>
+                <div
+                    className={`${styleClasses.navbarLinksContainer} ${toggleNavbar ? styleClasses.toggleNavbar : ''}`}
+                >
+                    <li>
+                        <NavLink
+                            className={styleClasses.navbarLink}
+                            style={{ color: color !== 'inherit' && color }}
+                            to="/"
+                        >
+                            Home
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            className={styleClasses.navbarLink}
+                            style={{ color: color !== 'inherit' && color }}
+                            to="/world"
+                        >
+                            World
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            className={styleClasses.navbarLink}
+                            style={{ color: color !== 'inherit' && color }}
+                            to="/admin"
+                        >
+                            Admin
+                        </NavLink>
+                    </li>
+                </div>
+                <div
+                    className={`${styleClasses.navbarRightContainer} ${toggleNavbar ? styleClasses.toggleNavbar : ''}`}
+                >
+                    <div className="d-flex gap-3">
+                        <WalletButton variant={walletVariant} />
                     </div>
-                </BootStrapNavbar.Collapse>
-            </Container>
-        </BootStrapNavbar>
+                </div>
+            </header>
+        </>
     );
-}
+};
 
-export default Navbar;
+NavBar.defaultProps = {
+    scroll: false,
+    background: 'rgba(35, 44, 21, 1)',
+    color: '#fff',
+    walletVariant: 'dark',
+};
+
+export default NavBar;

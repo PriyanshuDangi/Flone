@@ -1,16 +1,18 @@
-import Navbar from "../../components/navbar/Navbar";
+import ExplodingObject from "../../components/explodingObject/ExplodingObject";
+import NavBar from "../../components/navbar/Navbar";
 
 const Home = () => {
     return (
         <div>
-            <Navbar />
-            <video playinline="true" autoPlay muted loop id="bgvid">
+            <NavBar background="transparent" scroll={true} />
+            {/* <video playinline="true" autoPlay muted loop id="bgvid">
                 <source src="/Black.mp4" type="video/mp4" />
             </video>
 
             <div>
                 <h1>FLONE</h1>
-            </div>
+            </div> */}
+            <ExplodingObject />
         </div>
     );
 };

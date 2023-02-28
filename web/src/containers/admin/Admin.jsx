@@ -38,6 +38,7 @@ const Admin = () => {
                             <input type="text" name="hash" required />
                         </div>
                         <button type="submit">Set Hash</button>
+                        <p>You can only update for the land you own</p>
                     </form>
                 </div>
                 <div>
@@ -50,6 +51,7 @@ const Admin = () => {
                             <input type="text" name="hash" required />
                         </div>
                         <button type="submit">Mint NFT</button>
+                        <p>Only Admin will be able to mint the NFT</p>
                     </form>
                 </div>
             </div>

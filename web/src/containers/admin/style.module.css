@@ -1,5 +1,6 @@
 .container {
     text-align: center;
+    margin-top: 100px;
 }
 
 .container > div {
@@ -10,4 +11,8 @@
 
 .container > div div {
     margin: 15px 0;
+}
+
+p {
+    color: #999;
 }

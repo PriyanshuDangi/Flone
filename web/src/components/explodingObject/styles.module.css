@@ -1,0 +1,36 @@
+:root {
+    --logoHeight: 205px;
+    --logoWidth: min(630px, 90vw);
+}
+
+.logo {
+    position: absolute;
+    /* top: calc(50% - (var(--logoHeight) / 2));
+    left: calc(50% - (var(--logoWidth) / 2)); */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 500px;
+}
+
+.title {
+    font-size: 128px;
+    max-width: 90%;
+    text-align: center;
+    margin: auto;
+}
+
+.title img {
+    max-width: 100%;
+    margin: auto;
+    /* width: 100%; */
+}
+
+.links {
+    /* display: flex;
+    justify-content: space-evenly; */
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: 'MyFont';
+    /* color: red; */
+}
