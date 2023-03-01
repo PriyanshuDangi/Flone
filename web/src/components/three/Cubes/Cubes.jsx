@@ -12,7 +12,7 @@ import useStore from '../../../zustand/useStore';
 import { BACKEND_URL, PINATA_GATEWAY_URL } from '../../../config/app';
 import { useLocation } from 'react-router-dom';
 
-const { object, meshes } = createMesh(1 * 100 * 5);
+const { object, meshes } = createMesh(11 * 100 * 5);
 let cubesCount = tiles.map(() => 0);
 // const stats = new Stats();
 let maxImageCount = 3;
@@ -87,7 +87,6 @@ const Cubes = (props) => {
                         let images = res.data.images;
                         if (cubes) {
                             for (let j = 0; j < cubes.length; j++) {
-                                // cubes[j] = cubes[j].slice(0, count[j] || 0); // to render only cubes available
                                 for (let k = 0; k < cubes[j].length; k++) {
                                     const cube = cubes[j][k];
                                     const { position, color } = cube;
