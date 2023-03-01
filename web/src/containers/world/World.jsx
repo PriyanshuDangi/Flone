@@ -18,7 +18,7 @@ import { selectCubesNFT } from '../../store/reducers/cubesNFTSlice';
 
 import Chat from '../../components/chat/connectChat';
 
-import styleClasses from "./styles.module.css";
+import styleClasses from './styles.module.css';
 
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -29,6 +29,7 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import VolumeSlider from '../../components/VolumeSlider/VolumeSlider';
 
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import TouchJoystick from '../../components/joystick/TouchJoystick';
 
 let initialState = {
     forward: false,
@@ -40,7 +41,6 @@ let initialState = {
 };
 
 const World = (props) => {
-
     const cubesData = useSelector(selectCubesNFT);
     // const cubesData = [];
 
@@ -63,7 +63,6 @@ const World = (props) => {
     const [fullscreen, setFullscreen] = useState(false);
     const [movement, setMovement] = useState(initialState);
     const [touchDevice, setTouchDevice] = useState(false);
-
     const handleFullScreen = useFullScreenHandle();
 
     useEffect(() => {
@@ -127,72 +126,72 @@ const World = (props) => {
 
     return (
         <>
-        <FullScreen handle={handleFullScreen} onChange={reportChange}>
+            <FullScreen handle={handleFullScreen} onChange={reportChange}>
+                <div style={{ height: '100vh' }}>
+                    {/* gl={{ antialias: true, toneMapping: THREE.NoToneMapping }} */}
+                    <Canvas gl={{ antialias: true, toneMapping: THREE.NoToneMapping }} camera={{ far: 4000 }}>
+                        {/* <Perf position="top-left" /> */}
+                        <Ocean />
+                        <Ground length={11} breadth={11} />
+                        {/* <OrbitControls /> */}
+                        {controls}
+                        <Cubes cubesData={cubesData} />
+                        <Players />
+                    </Canvas>
 
-
-        
-        <div style={{ height: '100vh' }}>
-            {/* gl={{ antialias: true, toneMapping: THREE.NoToneMapping }} */}
-            <Canvas gl={{ antialias: true, toneMapping: THREE.NoToneMapping }} camera={{ far: 4000 }}>
-                {/* <Perf position="top-left" /> */}
-                <Ocean />
-                <Ground length={11} breadth={11} />
-                {/* <OrbitControls /> */}
-                {controls}
-                <Cubes cubesData={cubesData} />
-                <Players />
-            </Canvas>
-
-            <div className={styleClasses.sidebar}>
-                <div className={styleClasses.sidebar__header}>
-                    <div className={styleClasses.icon}>
-                        {!showVolumeSlider ? (
-                            <VolumeUpIcon
-                                onClick={() => {
-                                    setShowVolumeSlider(true);
-                                    setShowChat(false);
-                                    setShowMenu(false);
-                                }}
-                            />
-                        ) : (
-                            <CloseIcon onClick={() => setShowVolumeSlider(false)} />
-                        )}
+                    <div className={styleClasses.sidebar}>
+                        <div className={styleClasses.sidebar__header}>
+                            <div className={styleClasses.icon}>
+                                {!showVolumeSlider ? (
+                                    <VolumeUpIcon
+                                        onClick={() => {
+                                            setShowVolumeSlider(true);
+                                            setShowChat(false);
+                                            setShowMenu(false);
+                                        }}
+                                    />
+                                ) : (
+                                    <CloseIcon onClick={() => setShowVolumeSlider(false)} />
+                                )}
+                            </div>
+                            <div className={styleClasses.icon}>
+                                {!showChat ? (
+                                    <ChatIcon
+                                        onClick={() => {
+                                            setShowChat(true);
+                                            setShowVolumeSlider(false);
+                                            setShowMenu(false);
+                                        }}
+                                    />
+                                ) : (
+                                    <CloseIcon onClick={() => setShowChat(false)} />
+                                )}
+                            </div>
+                            <div className={styleClasses.icon}>
+                                {!fullscreen ? (
+                                    <FullscreenIcon onClick={handleFullScreen.enter} />
+                                ) : (
+                                    <FullscreenExitIcon onClick={handleFullScreen.exit} />
+                                )}
+                            </div>
+                        </div>
+                        <div className={`${styleClasses.sidebar__body} ${!showSidebar ? styleClasses.none : ''}`}>
+                            {showVolumeSlider && (
+                                <VolumeSlider
+                                    bgVolume={bgVolume}
+                                    setBgVolume={setBgVolume}
+                                    footVolume={footVolume}
+                                    setFootVolume={setFootVolume}
+                                />
+                            )}
+                            <Chat userName={userName} roomId={roomId} userId={userId} show={showChat} />
+                        </div>
                     </div>
-                    <div className={styleClasses.icon}>
-                        {!showChat ? (
-                            <ChatIcon
-                                onClick={() => {
-                                    setShowChat(true);
-                                    setShowVolumeSlider(false);
-                                    setShowMenu(false);
-                                }}
-                            />
-                        ) : (
-                            <CloseIcon onClick={() => setShowChat(false)} />
-                        )}
-                    </div>
-                    <div className={styleClasses.icon}>
-                        {!fullscreen ? (
-                            <FullscreenIcon onClick={handleFullScreen.enter} />
-                        ) : (
-                            <FullscreenExitIcon onClick={handleFullScreen.exit} />
-                        )}
+                    <div className={`${styleClasses.joystickContainer} ${!touchDevice ? 'd-none' : ''}`}>
+                        <TouchJoystick setMovement={setMovement} />
                     </div>
                 </div>
-                <div className={`${styleClasses.sidebar__body} ${!showSidebar ? styleClasses.none : ''}`}>
-                    {showVolumeSlider && (
-                        <VolumeSlider
-                            bgVolume={bgVolume}
-                            setBgVolume={setBgVolume}
-                            footVolume={footVolume}
-                            setFootVolume={setFootVolume}
-                        />
-                    )}
-                    <Chat userName={userName} roomId={roomId} userId={userId} show={showChat} />
-                </div>
-            </div>
-        </div>
-        </FullScreen>
+            </FullScreen>
         </>
     );
 };

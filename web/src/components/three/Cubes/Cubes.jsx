@@ -74,14 +74,14 @@ const Cubes = (props) => {
 
                     if (land_ipfs) {
                         let res = {};
-                        if(query.get('fetch') === 'backend'){
+                        if (query.get('fetch') === 'backend') {
                             res = await axios({
-                                url: `${process.env.REACT_APP_BACKEND_URL}/storage/lands/${token_id}/ipfs.json`
-                            }); 
-                        }else {
-                           res = await axios({
-                            url: process.env.REACT_APP_PINATA_GATEWAY_URL + land_ipfs,
-                        }); 
+                                url: `${process.env.REACT_APP_BACKEND_URL}/storage/lands/${token_id}/ipfs.json`,
+                            });
+                        } else {
+                            res = await axios({
+                                url: process.env.REACT_APP_PINATA_GATEWAY_URL + land_ipfs,
+                            });
                         }
                         const cubes = res.data.cubes;
                         let images = res.data.images;
@@ -127,7 +127,8 @@ const Cubes = (props) => {
                             images = images.slice(0, maxImageCount);
                             for (let j = 0; j < images.length; j++) {
                                 let { image, url, position, quaternion, size } = images[j];
-                                if (image.substring(0, 7) === 'ipfs://') image = process.env.REACT_APP_PINATA_GATEWAY_URL + image.slice(7);
+                                if (image.substring(0, 7) === 'ipfs://')
+                                    image = process.env.REACT_APP_PINATA_GATEWAY_URL + image.slice(7);
                                 if (!image || !url || !position || !quaternion || !size) {
                                     continue;
                                 }
@@ -164,7 +165,7 @@ const Cubes = (props) => {
             scene.add(imageGroup);
         };
         if (cubesData && cubesData.length > 0) func();
-        console.log("cubes data changed")
+        console.log('cubes data changed');
     }, [cubesData]);
 
     // useFrame(() => {

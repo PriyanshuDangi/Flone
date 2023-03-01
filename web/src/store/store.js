@@ -5,6 +5,6 @@ import cubesNFTSlice from './reducers/cubesNFTSlice';
 export const store = configureStore({
     reducer: {
         wallet: walletReducer,
-        cubesNFT: cubesNFTSlice
+        cubesNFT: cubesNFTSlice,
     },
 });

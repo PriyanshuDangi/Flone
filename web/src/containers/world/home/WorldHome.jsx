@@ -38,9 +38,7 @@ const WorldHome = () => {
                 }`}
                 onClick={() => setSelectedAvatar(attribute)}
             >
-                <div className={styleClasses.avatarSelected}>
-                    ✔
-                </div>
+                <div className={styleClasses.avatarSelected}>✔</div>
                 <img src={data.image} alt={data.name} />
                 <span>{data.name}</span>
             </div>
@@ -61,7 +59,6 @@ const WorldHome = () => {
         setRoomId(id);
         setShowWorld(true);
     };
-
 
     return !showWorld ? (
         <div>

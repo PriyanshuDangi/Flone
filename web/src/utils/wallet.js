@@ -74,7 +74,7 @@ export const createEmptyCollection = async () => {
     console.log(transactionId);
 };
 
-export const mintNFT = async (hash = "") => {
+export const mintNFT = async (hash = '') => {
     const transactionId = await fcl.mutate({
         cadence: `
                 import NonFungibleToken from 0x631e88ae7f1d7c20
@@ -119,7 +119,7 @@ export const mintNFT = async (hash = "") => {
     console.log(transactionId);
 };
 
-export const getNFTs = async (addr="0xa6acb8c2a3d23fef") => {
+export const getNFTs = async (addr = '0xa6acb8c2a3d23fef') => {
     const response = await fcl.query({
         cadence: `
                 import NonFungibleToken from 0x631e88ae7f1d7c20
@@ -142,7 +142,7 @@ export const getNFTs = async (addr="0xa6acb8c2a3d23fef") => {
         `,
         args: (arg, t) => [arg(addr, t.Address)],
     });
-    console.log(response)
+    console.log(response);
     return response;
     // return await fcl.decode(response);
 };
@@ -171,7 +171,6 @@ export const getNFTs = async (addr="0xa6acb8c2a3d23fef") => {
 //     console.log(response);
 //     // return await fcl.decode(response);
 // };
-
 
 export const setIPFS = async (id, ipfsHash) => {
     console.log(typeof id);
@@ -203,5 +202,4 @@ export const setIPFS = async (id, ipfsHash) => {
     });
 
     return fcl.tx(transactionId).onceSealed();
-
-}
+};

@@ -31,13 +31,13 @@ function App() {
             try {
                 dispatch(setCubesNFTAsync());
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
-        }
+        };
         func();
 
-        console.log("woah");
-    }, [])
+        console.log('woah');
+    }, []);
 
     return (
         <Router>

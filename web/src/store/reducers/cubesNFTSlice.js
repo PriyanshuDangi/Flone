@@ -16,13 +16,13 @@ const initialState = {
 export const setCubesNFTAsync = createAsyncThunk('cubesNFT/fetch', async () => {
     let cubesNFT = await getNFTs();
     cubesNFT = cubesNFT.reverse();
-   
-    return cubesNFT.map((cube,index) => {
+
+    return cubesNFT.map((cube, index) => {
         return {
             // token_id: cube.id,
             token_id: index,
-            land_ipfs: cube.ipfsHash
-        }
+            land_ipfs: cube.ipfsHash,
+        };
     });
 });
 

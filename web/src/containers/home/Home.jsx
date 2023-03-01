@@ -1,5 +1,5 @@
-import ExplodingObject from "../../components/explodingObject/ExplodingObject";
-import NavBar from "../../components/navbar/Navbar";
+import ExplodingObject from '../../components/explodingObject/ExplodingObject';
+import NavBar from '../../components/navbar/Navbar';
 
 const Home = () => {
     return (

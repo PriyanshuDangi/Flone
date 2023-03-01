@@ -64,7 +64,7 @@ const Connect = (props) => {
             console.log(err);
             socket.emit('join_room', { roomId, userId: userId, user: userName });
             setJoinedChat(true);
-        })
+        });
 
         peer.on('close', () => {
             try {
@@ -205,12 +205,7 @@ const Connect = (props) => {
                 {showParticipants && <ShowParticipants />}
             </div>
             <div className={minimized ? styleClasses.dNone : styleClasses.chatContainer}>
-                <Chat
-                    show={joinedChat}
-                    socket={socket}
-                    userName={props.userName || userName || pkh}
-                    room={roomId}
-                />
+                <Chat show={joinedChat} socket={socket} userName={props.userName || userName || pkh} room={roomId} />
             </div>
         </div>
     );
